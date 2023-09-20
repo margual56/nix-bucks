@@ -1,0 +1,97 @@
+dialog {
+    color:var(--foreground);
+    border: none;
+    border-radius: var(--roundness);
+    background-color: var(--background-light);
+}
+
+dialog::backdrop {
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+}
+
+dialog input {
+    max-width: calc(100% - 40px);
+}
+
+dialog input::-webkit-outer-spin-button,
+dialog input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+dialog .title {
+    color: var(--accent);
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+dialog > form div:not(.container) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+dialog > form label {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+dialog > form > div.container {
+    margin-top: 0.7em;
+    padding-top: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+dialog > form > div.container > div {
+    width: 45%;
+}
+
+dialog select {
+    border-radius: var(--roundness);
+    font-size: 1em;
+    padding: 0.25em 0.5em;
+}
+
+dialog > button.close-modal {
+    color: var(--foreground);
+    font-weight: bold;
+
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    background: none;
+}
+
+dialog .select-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em 1em;
+    margin: 0.5em auto;
+    margin-top: 1em;
+    border-radius: var(--roundness);
+    border: 1px solid var(--accent);
+}
+
+dialog .select-div > p {
+    margin: 0.25em;
+    text-align: center;
+}
+
+dialog .select-div input {
+    margin: 0 0.25em;
+}
+
+dialog button[type="submit"] {
+    width: 100%;
+    background-color: var(--accent);
+    color: var(--foreground);
+    border-radius: var(--roundness);
+}

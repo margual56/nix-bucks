@@ -1,0 +1,43 @@
+button.add-entry {
+    width: calc(100% - 1em);
+    border-radius: calc(var(--roundness) / 2);
+    background-color: var(--accent);
+    color: var(--foreground);
+    font-size: x-large;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0.5em;
+    margin-top: 1em;
+}
+
+button.add-entry img {
+    margin: 0.5em;
+    width: 30px;
+    height: 30px;
+}
+
+table > thead > tr {
+    padding-bottom: 1em;
+    height: 2em;
+    border-bottom: #49494946 1px solid;
+}
+
+table > tbody {
+    max-height: 30vh;
+    overflow-y: scroll;
+}
+
+tbody .delete-button {
+    color: #494949;
+
+    background: none;
+    box-shadow: none;
+}
+
+tbody .delete-button img {
+    margin-right: 0.6em;
+}
+
