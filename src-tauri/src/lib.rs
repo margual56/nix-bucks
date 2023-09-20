@@ -18,6 +18,10 @@ const QUALIFIER: &str = "com";
 const ORGANIZATION: &str = "margual56";
 const APPLICATION: &str = "NixBucks";
 
+pub fn format_money(amount: f32) -> String {
+    return format!("{:+.2} €", amount);
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct App {
     pub initial_savings: f32,

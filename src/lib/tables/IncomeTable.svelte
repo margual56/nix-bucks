@@ -1,4 +1,9 @@
-<script></script>
+<script>
+    import { openModal } from "../dialogs/NewIncomeDialog.svelte";
+    import { updateTable } from "../../App.svelte";
+    
+    $: updateTable("table_income", "table-income");
+</script>
 
 
 <h1>Income streams</h1>
@@ -13,7 +18,7 @@
   </thead>
   <tbody />
 </table>
-<button class="add-entry" id="add-income">
+<button class="add-entry" id="add-income" on:click={openModal}>
   <img src="/src/assets/icon-add.svg" alt="" width="30" />
   Add income stream
 </button>

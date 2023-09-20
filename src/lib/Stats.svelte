@@ -1,4 +1,12 @@
-<script></script>
+<script lang="ts">
+    import { updateValue } from "../App.svelte";
+
+    $: updateValue("montly_cost","stats-mc");
+    $: updateValue("eoy_cost","stats-eoy-cost");
+    $: updateValue("eoy_income","stats-eoy-income");
+    $: updateValue("eoy_balance","stats-eoy-balance");
+    $: updateValue("eom_balance","stats-mb");
+</script>
 
 
 <h1>My Stats</h1>

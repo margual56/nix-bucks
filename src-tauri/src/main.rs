@@ -6,11 +6,6 @@ use std::sync::Mutex;
 use uuid::Uuid;
 
 #[tauri::command]
-fn format_money(amount: f32) -> String {
-    return format!("{:+.2} €", amount);
-}
-
-#[tauri::command]
 fn delete_uuid(app: tauri::State<Wrapper>, uuid: Uuid) {
     let mut my_app = app.0.lock().unwrap();
 
@@ -33,7 +28,7 @@ fn main() {
         .manage(Wrapper(Mutex::new(App::default())))
         .invoke_handler(tauri::generate_handler![
             get_savings,
-            format_money,
+            get_subscriptions,
             montly_cost,
             eoy_cost,
             eoy_income,

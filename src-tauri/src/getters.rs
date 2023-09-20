@@ -1,4 +1,5 @@
 use crate::Wrapper;
+use crate::format_money;
 
 #[tauri::command]
 pub fn get_savings(app: tauri::State<Wrapper>) -> f32 {
@@ -28,4 +29,24 @@ pub fn eoy_balance(app: tauri::State<Wrapper>) -> f32 {
 #[tauri::command]
 pub fn eom_balance(app: tauri::State<Wrapper>) -> f32 {
     app.0.lock().unwrap().monthly_balance()
+}
+
+#[derive(serde::Serialize, serde::Deserialize)]
+pub struct ExportedSubscription {
+    name: String,
+    cost: String,
+    recurrence: String,
+}
+
+#[tauri::command]
+pub fn get_subscriptions(app: tauri::State<Wrapper>) -> Vec<ExportedSubscription> {
+    app.0.lock().unwrap().subscriptions.clone()
+        .into_values()
+        .map(|s|
+             ExportedSubscription {
+                 name: String::from(s.name()),
+                 cost: format_money(-s.cost()),
+                 recurrence: s.recurrence().to_string(),
+             }
+        ).collect()
 }
