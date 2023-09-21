@@ -12,7 +12,7 @@
     })
 
     async function delete_subscription(uuid: string) {
-        await invoke("delete_uuid", {uuidStr: uuid});
+        await invoke("delete_uuid", {uuid: uuid});
         subscriptions = (await invoke("get_subscriptions") as Subscription[]);
     };
 </script>

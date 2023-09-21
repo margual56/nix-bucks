@@ -6,8 +6,7 @@ use std::sync::Mutex;
 use uuid::Uuid;
 
 #[tauri::command]
-fn delete_uuid(app: tauri::State<Wrapper>, uuid_str: String) {
-    let uuid = Uuid::parse_str(&uuid_str).unwrap();
+fn delete_uuid(app: tauri::State<Wrapper>, uuid: Uuid) {
     let mut my_app = app.0.lock().unwrap();
 
     *my_app = my_app.clone().remove_from_uuid(uuid);

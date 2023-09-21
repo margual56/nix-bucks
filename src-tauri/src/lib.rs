@@ -201,13 +201,10 @@ impl App {
     /// Returns the total cost of all subscriptions in a whole year.
     #[allow(dead_code)]
     pub fn yearly_costs(&self) -> f32 {
-        let mut amount = 0.0;
-
-        for subscription in self.subscriptions.values() {
-            amount += subscription.cost_per_year();
-        }
-
-        amount
+        cost_to_year_end(
+            self.subscriptions.clone().into_values().collect(),
+            self.fixed_expenses.clone().into_values().collect(),
+        )
     }
 
     /// Returns the total cost of all subscriptions in a month.
@@ -244,9 +241,6 @@ impl App {
     }
 
     pub fn yearly_balance(&self) -> f32 {
-        cost_to_year_end(
-            self.subscriptions.clone().into_values().collect(),
-            self.fixed_expenses.clone().into_values().collect(),
-        )
+        self.yearly_income() - self.yearly_costs()
     }
 }
