@@ -1,3 +1,5 @@
+use uuid::Uuid;
+
 use crate::Wrapper;
 use crate::format_money;
 
@@ -33,6 +35,7 @@ pub fn eom_balance(app: tauri::State<Wrapper>) -> String {
 
 #[derive(serde::Serialize, serde::Deserialize)]
 pub struct ExportedSubscription {
+    uuid: Uuid,
     name: String,
     cost: String,
     recurrence: String,
@@ -40,13 +43,18 @@ pub struct ExportedSubscription {
 
 #[tauri::command]
 pub fn get_subscriptions(app: tauri::State<Wrapper>) -> Vec<ExportedSubscription> {
-    app.0.lock().unwrap().subscriptions.clone()
+    let mut arr = app.0.lock().unwrap().subscriptions.clone()
         .into_values()
         .map(|s|
              ExportedSubscription {
+                 uuid: s.uuid(),
                  name: String::from(s.name()),
                  cost: format_money(-s.cost()),
                  recurrence: s.recurrence().to_string(),
              }
-        ).collect()
+        )
+        .collect::<Vec<ExportedSubscription>>();
+    arr.sort_by(|a, b| a.name.cmp(&b.name));
+
+    arr
 }

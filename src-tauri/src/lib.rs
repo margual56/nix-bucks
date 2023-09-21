@@ -142,9 +142,8 @@ impl App {
             let app = App {
                 subscriptions: subs,
                 ..self
-            }
-            .update();
-
+            };
+            
             return app;
         } else if self.fixed_expenses.contains_key(&uuid) {
             let mut fexp = self.fixed_expenses.clone();
@@ -153,22 +152,21 @@ impl App {
             let app = App {
                 fixed_expenses: fexp,
                 ..self
-            }
-            .update();
+            };
 
             return app;
         } else if self.incomes.contains_key(&uuid) {
             let mut incomes = self.incomes.clone();
             incomes.remove_entry(&uuid);
 
-            let app = App { incomes, ..self }.update();
+            let app = App { incomes, ..self };
 
             return app;
         } else if self.p_incomes.contains_key(&uuid) {
             let mut p_incomes = self.p_incomes.clone();
             p_incomes.remove_entry(&uuid);
 
-            let app = App { p_incomes, ..self }.update();
+            let app = App { p_incomes, ..self };
 
             return app;
         } else {
@@ -199,7 +197,6 @@ impl App {
     }
 
     /// Returns the total cost of all subscriptions in a whole year.
-    #[allow(dead_code)]
     pub fn yearly_costs(&self) -> f32 {
         cost_to_year_end(
             self.subscriptions.clone().into_values().collect(),

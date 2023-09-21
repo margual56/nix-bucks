@@ -12,7 +12,8 @@
     })
 
     async function delete_subscription(uuid: string) {
-        await invoke("delete_uuid", {uuid: uuid});
+        await invoke("delete_uuid", {uuid: uuid}).then(() => console.log("Deleted!"));
+
         subscriptions = (await invoke("get_subscriptions") as Subscription[]);
     };
 </script>
@@ -56,4 +57,4 @@
 <button class="add-entry" id="add-subscription" on:click={openModal}>
   <img src="/src/assets/icon-add.svg" alt="" width="30" />
   Add subscription
-</button>
+    </button>

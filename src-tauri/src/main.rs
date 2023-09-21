@@ -9,7 +9,7 @@ use uuid::Uuid;
 fn delete_uuid(app: tauri::State<Wrapper>, uuid: Uuid) {
     let mut my_app = app.0.lock().unwrap();
 
-    *my_app = my_app.clone().remove_from_uuid(uuid);
+    *my_app = my_app.clone().remove_from_uuid(uuid).update();
 
     my_app.save_data();
 }
