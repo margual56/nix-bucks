@@ -8,11 +8,13 @@
     let subscriptions: Subscription[];
 
     onMount(async () => {
-        invoke("get_subscriptions").then((response: unknown) => {
-            subscriptions = (response as Subscription[]);
-            console.log(subscriptions);
-        });
-    });
+        subscriptions = (await invoke("get_subscriptions") as Subscription[]);
+    })
+
+    async function delete_subscription(uuid: string) {
+        await invoke("delete_uuid", {uuidStr: uuid});
+        subscriptions = (await invoke("get_subscriptions") as Subscription[]);
+    };
 </script>
 
 <h1>Subscriptions</h1>
@@ -40,7 +42,7 @@
         <td>{subscription.cost}</td>
         <td>{subscription.recurrence}</td>
         <td>
-        <button class="delete-button" data-uuid={subscription.uuid} data-table="table-subscriptions" data-function="table_subscription">
+        <button class="delete-button" data-uuid={subscription.uuid} on:click={() => delete_subscription(subscription.uuid)}>
             <img src="/src/assets/icon-delete.svg" alt="Delete" width="17" height="17" />
             Delete
         </button>

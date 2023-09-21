@@ -6,7 +6,8 @@ use std::sync::Mutex;
 use uuid::Uuid;
 
 #[tauri::command]
-fn delete_uuid(app: tauri::State<Wrapper>, uuid: Uuid) {
+fn delete_uuid(app: tauri::State<Wrapper>, uuid_str: String) {
+    let uuid = Uuid::parse_str(&uuid_str).unwrap();
     let mut my_app = app.0.lock().unwrap();
 
     *my_app = my_app.clone().remove_from_uuid(uuid);
@@ -29,7 +30,7 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_savings,
             get_subscriptions,
-            montly_cost,
+            monthly_cost,
             eoy_cost,
             eoy_income,
             eoy_balance,

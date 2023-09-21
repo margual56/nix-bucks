@@ -29,7 +29,7 @@
             years: years
         };
 
-        invoke('add_subscription', tmp_subscription);
+        invoke('add_subscription', {tmp: tmp_subscription});
     }
 </script>
 
