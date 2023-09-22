@@ -17,25 +17,25 @@
 </script>
 
 <script context="module" lang="ts">
-  export interface Subscription {
-    uuid: string,
-    name: string,
-    cost: number,
-    recurrence: string,
-  };
+    export interface Subscription {
+        uuid: string,
+        name: string,
+        cost: number,
+        recurrence: string,
+    };
 
-  export async function updateValue(function_name: string, element_id: string) {
-    invoke(function_name).then(async (value) => {
-        let element = document.getElementById(element_id)!;
-        element.innerText = value + "";
-  
-        if(value as number < 0) {
-          element.classList.add("negative");
-        }else{
-          element.classList.remove("negative");
-        }
-    });
-  }
+    export async function updateValue(function_name: string, element_id: string) {
+      invoke(function_name).then(async (value) => {
+          let element = document.getElementById(element_id)!;
+          element.innerText = value + "";
+    
+          if(value as number < 0) {
+            element.classList.add("negative");
+          }else{
+            element.classList.remove("negative");
+          }
+      });
+    }
   
   export async function updateTable(function_name: string, table_id: string) {
     invoke(function_name).then((value) => {

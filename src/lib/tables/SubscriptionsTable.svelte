@@ -12,6 +12,7 @@
     })
 
     async function delete_subscription(uuid: string) {
+        console.log(uuid);
         await invoke("delete_uuid", {uuid: uuid}).then(() => console.log("Deleted!"));
 
         subscriptions = (await invoke("get_subscriptions") as Subscription[]);

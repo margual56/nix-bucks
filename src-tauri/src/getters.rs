@@ -58,3 +58,21 @@ pub fn get_subscriptions(app: tauri::State<Wrapper>) -> Vec<ExportedSubscription
 
     arr
 }
+
+#[tauri::command]
+pub fn get_incomes(app: tauri::State<Wrapper>) -> Vec<ExportedSubscription> {
+    let mut arr = app.0.lock().unwrap().incomes.clone()
+        .into_values()
+        .map(|s|
+             ExportedSubscription {
+                 uuid: s.uuid(),
+                 name: String::from(s.name()),
+                 cost: format_money(-s.cost()),
+                 recurrence: s.recurrence().to_string(),
+             }
+        )
+        .collect::<Vec<ExportedSubscription>>();
+    arr.sort_by(|a, b| a.name.cmp(&b.name));
+
+    arr
+}

@@ -174,12 +174,23 @@ impl App {
         }
     }
 
-    pub fn add_subscription(self, tmp: TmpSubscription) -> Self { 
-        let mut other = self.clone();
+    pub fn add_subscription(&mut self, tmp: TmpSubscription) -> Subscription { 
+        let uuid = Uuid::new_v4();
+        let subscription: Subscription = tmp.to_subscription(uuid);
 
-        other.subscriptions.insert(Uuid::new_v4(), tmp.into());
+        self.subscriptions.insert(uuid, subscription.clone());
 
-        other
+        subscription
+    }
+
+    pub fn add_income(&mut self, tmp: TmpSubscription) -> Subscription { 
+        let uuid = Uuid::new_v4();
+
+        let subscription: Subscription = tmp.to_subscription(uuid);
+
+        self.incomes.insert(uuid, subscription.clone());
+
+        subscription
     }
 
     /// Removes an expense.

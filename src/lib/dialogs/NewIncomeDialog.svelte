@@ -6,6 +6,9 @@
 
 <script lang="ts">
     import { invoke } from "@tauri-apps/api";
+    import { incomes } from "../store.ts";
+    import type { Subscription } from "../../App.svelte";
+    import type { Writable } from "svelte/store";
 
     let selected = 'Month';
 
@@ -19,8 +22,9 @@
         (document.getElementById('dialog-income')! as HTMLDialogElement).close();
     }
 
+    async function submit_income(event: SubmitEvent){
+        event.preventDefault();
 
-    function submit_income() {
         let tmp_subscription = {
             name: concept,
             cost: amount,
@@ -30,7 +34,10 @@
             years: years
         };
 
-        invoke('add_income', tmp_subscription);
+        invoke('add_income', {tmp: tmp_subscription}).then((new_income) => {
+            closeModal();
+            $incomes = [...$incomes, (new_income as Subscription)];
+        });
     }
 </script>
 
@@ -53,11 +60,11 @@
     </div>
     <div class="container">
       <div>
-        <label for="income-cost">Cost</label>
+        <label for="income-cost">Amount</label>
         <input
           type="number"
           id="income-cost"
-          placeholder="Cost"
+          placeholder="Amount"
           min="0"
           step="any"
           bind:value={amount}
@@ -73,7 +80,7 @@
       </div>
     </div>
     <div>
-    {#if selected === 'daily'}
+    {#if selected === 'Day'}
       <div class="select-div" id="daily-income">
         <p>
           Every <input
@@ -86,7 +93,7 @@
           /> days
         </p>
       </div>
-    {:else if selected === 'monthly'}
+    {:else if selected === 'Month'}
       <div class="select-div" id="monthly-income">
         <p>
           The <input
@@ -110,7 +117,7 @@
           /> months
         </p>
       </div>
-    {:else if selected === 'yearly'}
+    {:else if selected === 'Year'}
       <div class="select-div" id="yearly-income">
         <p>
           The <input
