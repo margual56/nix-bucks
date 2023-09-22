@@ -2,20 +2,17 @@
     import { openModal } from "../dialogs/NewSubscriptionDialog.svelte";
     import { onMount } from "svelte";
     import { invoke } from "@tauri-apps/api/tauri";
-    import Subscription from "../../App.svelte";
-
-
-    let subscriptions: Subscription[];
+    import type Subscription from "../../App.svelte";
+    import { subscriptions } from "../store.ts";
 
     onMount(async () => {
-        subscriptions = (await invoke("get_subscriptions") as Subscription[]);
+        $subscriptions = (await invoke("get_subscriptions") as Subscription[]);
     })
 
     async function delete_subscription(uuid: string) {
-        console.log(uuid);
         await invoke("delete_uuid", {uuid: uuid}).then(() => console.log("Deleted!"));
 
-        subscriptions = (await invoke("get_subscriptions") as Subscription[]);
+        $subscriptions = $subscriptions.filter((s) => s.uuid !== uuid);
     };
 </script>
 
@@ -30,7 +27,7 @@
     </tr>
   </thead>
   <tbody>
-  {#if subscriptions === undefined}
+  {#if $subscriptions === undefined}
     <tr>
         <td>Loading...</td>
         <td>Loading...</td>
@@ -38,7 +35,7 @@
         <td>Loading...</td>
     </tr>
   {:else}
-    {#each subscriptions as subscription}
+    {#each $subscriptions as subscription}
       <tr>
         <td>{subscription.name}</td>
         <td>{subscription.cost}</td>

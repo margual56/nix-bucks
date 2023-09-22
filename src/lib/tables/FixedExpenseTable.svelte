@@ -1,8 +1,20 @@
-<script>
+<script lang="ts">
     import { openModal } from "../dialogs/NewFixedExpenseDialog.svelte";
-    import { updateTable } from "../../App.svelte";
+    import { p_expenses } from "../store.ts";
+    import { onMount } from "svelte";
+    import { invoke } from "@tauri-apps/api/tauri";
+    import type { Punctual } from "../../App.svelte";
 
-    $: updateTable("table_fixed_expenses", "table-fixed-expenses");
+    onMount(async () => {
+        $p_expenses = await invoke("get_punctual_expenses") as Punctual[];
+
+        console.log($p_expenses);
+    });
+
+    async function delete_p_expense(uuid: string) {
+        invoke("delete_uuid", {uuid: uuid});
+        $p_expenses = $p_expenses.filter((expense) => expense.uuid !== uuid);
+    }
 </script>
 
 <h1>Fixed Expenses</h1>
@@ -15,6 +27,29 @@
       <th />
     </tr>
   </thead>
+  <tbody>
+    {#if $p_expenses === undefined }
+       <tr>
+            <td>Loading...</td>
+            <td>Loading...</td>
+            <td>Loading...</td>
+            <td>Loading...</td>
+       </tr>
+    {:else}
+        {#each $p_expenses as p_expense}
+            <tr>
+                <td>{p_expense.name}</td>
+                <td>{p_expense.cost}</td>
+                <td>{p_expense.date}</td>
+                <td>
+                    <button class="delete-button" data-uuid={p_expense.uuid} on:click={delete_p_expense(p_expense.uuid)}>
+                        <img src="/src/assets/icon-delete.svg" alt="Delete" width="17" height="17" />
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        {/each}
+    {/if}
   <tbody />
 </table>
 <button class="add-entry" id="add-fixed-expense" on:click={openModal}>

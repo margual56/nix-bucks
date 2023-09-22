@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use nix_bucks::{App, Wrapper, getters::*, tables::*, TmpSubscription, Subscription};
+use nix_bucks::{App, Wrapper, getters::*, tables::*, TmpSubscription, Subscription, TmpExpense, FixedExpense};
 use std::sync::Mutex;
 use uuid::Uuid;
 
@@ -15,7 +15,7 @@ fn delete_uuid(app: tauri::State<Wrapper>, uuid: Uuid) {
 }
 
 #[tauri::command]
-fn add_subscription(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> Subscription {
+fn add_subscription(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> ExportedSubscription{
     let mut mut_app = app.0.lock().unwrap();
 
     *mut_app = mut_app.clone();
@@ -24,11 +24,11 @@ fn add_subscription(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> Subscri
     
     mut_app.update().save_data();
 
-    subscription
+    subscription.negative().into()
 }
 
 #[tauri::command]
-fn add_income(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> Subscription {
+fn add_income(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> ExportedSubscription {
     let mut mut_app = app.0.lock().unwrap();
 
     *mut_app = mut_app.clone();
@@ -37,7 +37,33 @@ fn add_income(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> Subscription 
     
     mut_app.update().save_data();
 
-    subscription
+    subscription.positive().into()
+}
+
+#[tauri::command]
+fn add_punctual_expense(app: tauri::State<Wrapper>, tmp: TmpExpense) -> ExportedExpense {
+    let mut mut_app = app.0.lock().unwrap();
+
+    *mut_app = mut_app.clone();
+
+    let p_expense = mut_app.add_p_expense(tmp);
+    
+    mut_app.update().save_data();
+
+    p_expense.negative().into()
+}
+
+#[tauri::command]
+fn add_punctual_income(app: tauri::State<Wrapper>, tmp: TmpExpense) -> ExportedExpense {
+    let mut mut_app = app.0.lock().unwrap();
+
+    *mut_app = mut_app.clone();
+
+    let p_income = mut_app.add_p_income(tmp);
+    
+    mut_app.update().save_data();
+
+    p_income.positive().into()
 }
 
 fn main() {
@@ -47,6 +73,8 @@ fn main() {
             get_savings,
             get_subscriptions,
             get_incomes,
+            get_punctual_incomes,
+            get_punctual_expenses,
             monthly_cost,
             eoy_cost,
             eoy_income,
@@ -58,7 +86,9 @@ fn main() {
             table_punctual_income,
             delete_uuid,
             add_subscription,
-            add_income
+            add_income,
+            add_punctual_expense,
+            add_punctual_income
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -109,6 +109,24 @@ impl Subscription {
         self.cost.0
     }
 
+    /// Converts the cost to a positive value.
+    pub fn positive(self) -> Self {
+        let mut other = self.clone();
+        
+        other.cost.0 = other.cost.0.abs();
+
+        other
+    }
+
+    /// Converts the cost to a negative value.
+    pub fn negative(self) -> Self {
+        let mut other = self.clone();
+        
+        other.cost.0 = -other.cost.0.abs();
+
+        other
+    }
+
     /// Returns the recurrence
     pub fn recurrence(&self) -> Recurrence {
         self.recurrence

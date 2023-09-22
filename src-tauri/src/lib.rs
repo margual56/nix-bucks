@@ -2,7 +2,7 @@ mod utils;
 pub mod tables;
 pub mod getters;
 
-pub use utils::{FixedExpense, Recurrence, Subscription, TmpSubscription};
+pub use utils::{FixedExpense, TmpExpense, Recurrence, Subscription, TmpSubscription};
 
 pub struct Wrapper(pub Mutex<App>);
 
@@ -191,6 +191,26 @@ impl App {
         self.incomes.insert(uuid, subscription.clone());
 
         subscription
+    }
+
+    pub fn add_p_expense(&mut self, tmp: TmpExpense) -> FixedExpense {
+        let uuid = Uuid::new_v4();
+
+        let p_expense: FixedExpense = FixedExpense::new(tmp.name, tmp.cost, NaiveDate::parse_from_str(&tmp.date, "%d/%m/%Y").unwrap());
+
+        self.fixed_expenses.insert(uuid, p_expense.clone());
+
+         p_expense
+    }
+
+    pub fn add_p_income(&mut self, tmp: TmpExpense) -> FixedExpense {
+        let uuid = Uuid::new_v4();
+
+        let p_income: FixedExpense = FixedExpense::new(tmp.name, tmp.cost, NaiveDate::parse_from_str(&tmp.date, "%d/%m/%Y").unwrap());
+
+        self.p_incomes.insert(uuid, p_income.clone());
+
+        p_income 
     }
 
     /// Removes an expense.

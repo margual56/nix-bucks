@@ -7,6 +7,7 @@
   import NewSubscriptionDialog from "./lib/dialogs/NewSubscriptionDialog.svelte";
   import NewIncomeDialog from "./lib/dialogs/NewIncomeDialog.svelte";
   import NewFixedExpenseDialog from "./lib/dialogs/NewFixedExpenseDialog.svelte";
+  import NewPunctualIncomeDialog from "./lib/dialogs/NewPunctualIncomeDialog.svelte";
 
   import Stats from "./lib/Stats.svelte";
   import TabButton from "./lib/TabButton.svelte";
@@ -24,6 +25,20 @@
         recurrence: string,
     };
 
+    export interface Punctual {
+        uuid: string,
+        name: string,
+        cost: number,
+        date: string,
+    };
+
+    export function formatDate(date: Date): string{
+        var d = date.getDate();
+        var m = date.getMonth() + 1; //Month from 0 to 11
+        var y = date.getFullYear();
+        return '' + (d <= 9 ? '0' + d : d) + '/' + (m<=9 ? '0' + m : m) + '/' + y;
+    }
+
     export async function updateValue(function_name: string, element_id: string) {
       invoke(function_name).then(async (value) => {
           let element = document.getElementById(element_id)!;
@@ -36,27 +51,6 @@
           }
       });
     }
-  
-  export async function updateTable(function_name: string, table_id: string) {
-    invoke(function_name).then((value) => {
-      let table = (document.getElementById(table_id)! as HTMLTableElement);
-  
-      table.tBodies[0].innerHTML = value + "";
-  
-      document.querySelectorAll(".delete-button").forEach((element) => {
-        element.addEventListener("click", (event) => {
-          let element = (event.target as HTMLButtonElement);
-          let uuid = element.dataset.uuid!;
-          let function_name = element.dataset.function!;
-          let table_id = element.dataset.table!;
-  
-          invoke("delete_uuid", {uuid: uuid}).then(() => {
-            updateTable(function_name, table_id);
-          });
-        });
-      });
-    })
-  }
 </script>
 
 <main class="container">
@@ -114,3 +108,4 @@
 <NewSubscriptionDialog/>
 <NewIncomeDialog />
 <NewFixedExpenseDialog />
+<NewPunctualIncomeDialog />

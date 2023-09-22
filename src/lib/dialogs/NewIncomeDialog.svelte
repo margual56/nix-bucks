@@ -6,7 +6,7 @@
 
 <script lang="ts">
     import { invoke } from "@tauri-apps/api";
-    import { incomes } from "../store.ts";
+    import { incomes, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
     import type { Subscription } from "../../App.svelte";
     import type { Writable } from "svelte/store";
 
@@ -14,9 +14,9 @@
 
     let concept = "";
     let amount = 0;
-    let days = 0;
-    let months = 0;
-    let years = 0;
+    let days = 1;
+    let months = 1;
+    let years = 1;
 
     function closeModal() {
         (document.getElementById('dialog-income')! as HTMLDialogElement).close();
@@ -34,10 +34,17 @@
             years: years
         };
 
-        invoke('add_income', {tmp: tmp_subscription}).then((new_income) => {
-            closeModal();
+        invoke('add_income', {tmp: tmp_subscription}).then(async (new_income) => {
             $incomes = [...$incomes, (new_income as Subscription)];
+            
+            $monthly_cost = await invoke("monthly_cost");
+            $eoy_cost = await invoke("eoy_cost");
+            $eoy_income = await invoke("eoy_income");
+            $eoy_balance = await invoke("eoy_balance");
+            $eom_balance = await invoke("eom_balance");
         });
+
+        closeModal();
     }
 </script>
 

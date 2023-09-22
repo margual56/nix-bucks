@@ -2,7 +2,7 @@ mod fixed_expense;
 mod recurrence;
 mod subscription;
 
-pub use fixed_expense::FixedExpense;
+pub use fixed_expense::{FixedExpense, TmpExpense};
 pub use recurrence::{times_until, Recurrence, SimpleRecurrence};
 pub use subscription::{Subscription, TmpSubscription};
 

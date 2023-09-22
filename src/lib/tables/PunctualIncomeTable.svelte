@@ -1,8 +1,18 @@
-<script>
-    import { openModal } from "../dialogs/NewSubscriptionDialog.svelte";
-    import { updateTable } from "../../App.svelte";
+<script lang="ts">
+    import { openModal } from "../dialogs/NewPunctualIncomeDialog.svelte";
+    import { invoke } from "@tauri-apps/api/tauri";
+    import type { Punctual } from "../../App.svelte";
+    import { p_incomes } from "../store.ts";
+    import { onMount } from "svelte";
 
-    $: updateTable("table_punctual_income", "table-punctual-income");
+    onMount(async () => {
+        $p_incomes = await invoke("get_punctual_incomes") as Punctual[];
+    });
+
+    async function delete_p_income(uuid: string) {
+        invoke("delete_uuid", {uuid: uuid});
+        $p_incomes = $p_incomes.filter((income) => income.uuid !== uuid);
+    }
 </script>
 
 
@@ -16,6 +26,28 @@
       <th />
     </tr>
   </thead>
+  <tbody>
+    {#if $p_incomes === undefined }
+       <tr>
+            <td>Loading...</td>
+            <td>Loading...</td>
+            <td>Loading...</td>
+            <td>Loading...</td>
+       </tr>
+    {:else}
+        {#each $p_incomes as p_income}
+            <tr>
+                <td>{p_income.name}</td>
+                <td>{p_income.cost}</td>
+                <td>{p_income.date}</td>
+                <td>
+                    <button class="delete-button" data-uuid={p_income.uuid} on:click={delete_p_income(p_income.uuid)}>
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        {/each}
+    {/if}
   <tbody />
 </table>
 <button class="add-entry" id="add-punctual-income" on:click={openModal}>
