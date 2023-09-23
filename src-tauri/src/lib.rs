@@ -1,8 +1,8 @@
-mod utils;
-pub mod tables;
 pub mod getters;
+pub mod tables;
+mod utils;
 
-pub use utils::{FixedExpense, Recurrence, Subscription, TmpSubscription};
+pub use utils::{FixedExpense, Recurrence, Subscription, TmpExpense, TmpSubscription};
 
 pub struct Wrapper(pub Mutex<App>);
 
@@ -17,6 +17,10 @@ use uuid::Uuid;
 const QUALIFIER: &str = "com";
 const ORGANIZATION: &str = "margual56";
 const APPLICATION: &str = "NixBucks";
+
+pub fn format_money(amount: f32) -> String {
+    return format!("{:+.2} €", amount);
+}
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct App {
@@ -138,8 +142,7 @@ impl App {
             let app = App {
                 subscriptions: subs,
                 ..self
-            }
-            .update();
+            };
 
             return app;
         } else if self.fixed_expenses.contains_key(&uuid) {
@@ -149,22 +152,21 @@ impl App {
             let app = App {
                 fixed_expenses: fexp,
                 ..self
-            }
-            .update();
+            };
 
             return app;
         } else if self.incomes.contains_key(&uuid) {
             let mut incomes = self.incomes.clone();
             incomes.remove_entry(&uuid);
 
-            let app = App { incomes, ..self }.update();
+            let app = App { incomes, ..self };
 
             return app;
         } else if self.p_incomes.contains_key(&uuid) {
             let mut p_incomes = self.p_incomes.clone();
             p_incomes.remove_entry(&uuid);
 
-            let app = App { p_incomes, ..self }.update();
+            let app = App { p_incomes, ..self };
 
             return app;
         } else {
@@ -172,12 +174,48 @@ impl App {
         }
     }
 
-    pub fn add_subscription(self, tmp: TmpSubscription) -> Self { 
-        let mut other = self.clone();
+    pub fn add_subscription(&mut self, tmp: TmpSubscription) -> Subscription {
+        let uuid = Uuid::new_v4();
+        let subscription: Subscription = tmp.to_subscription(uuid);
 
-        other.subscriptions.insert(Uuid::new_v4(), tmp.into());
+        self.subscriptions.insert(uuid, subscription.clone());
 
-        other
+        subscription
+    }
+
+    pub fn add_income(&mut self, tmp: TmpSubscription) -> Subscription {
+        let uuid = Uuid::new_v4();
+
+        let subscription: Subscription = tmp.to_subscription(uuid);
+
+        self.incomes.insert(uuid, subscription.clone());
+
+        subscription
+    }
+
+    pub fn add_p_expense(&mut self, tmp: TmpExpense) -> FixedExpense {
+        let p_expense: FixedExpense = FixedExpense::new(
+            tmp.name,
+            tmp.cost,
+            NaiveDate::parse_from_str(&tmp.date, "%d/%m/%Y").unwrap(),
+        );
+
+        self.fixed_expenses
+            .insert(p_expense.uuid(), p_expense.clone());
+
+        p_expense
+    }
+
+    pub fn add_p_income(&mut self, tmp: TmpExpense) -> FixedExpense {
+        let p_income: FixedExpense = FixedExpense::new(
+            tmp.name,
+            tmp.cost,
+            NaiveDate::parse_from_str(&tmp.date, "%d/%m/%Y").unwrap(),
+        );
+
+        self.p_incomes.insert(p_income.uuid(), p_income.clone());
+
+        p_income
     }
 
     /// Removes an expense.
@@ -195,15 +233,11 @@ impl App {
     }
 
     /// Returns the total cost of all subscriptions in a whole year.
-    #[allow(dead_code)]
     pub fn yearly_costs(&self) -> f32 {
-        let mut amount = 0.0;
-
-        for subscription in self.subscriptions.values() {
-            amount += subscription.cost_per_year();
-        }
-
-        amount
+        cost_to_year_end(
+            self.subscriptions.clone().into_values().collect(),
+            self.fixed_expenses.clone().into_values().collect(),
+        )
     }
 
     /// Returns the total cost of all subscriptions in a month.
@@ -240,9 +274,6 @@ impl App {
     }
 
     pub fn yearly_balance(&self) -> f32 {
-        cost_to_year_end(
-            self.subscriptions.clone().into_values().collect(),
-            self.fixed_expenses.clone().into_values().collect(),
-        )
+        self.yearly_income() - self.yearly_costs()
     }
 }

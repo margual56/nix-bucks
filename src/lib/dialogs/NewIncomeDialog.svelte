@@ -1,13 +1,14 @@
 <script context="module" lang="ts">
     export function openModal() {
-        (document.getElementById('dialog-subscriptions')! as HTMLDialogElement).showModal();
+        (document.getElementById('dialog-income')! as HTMLDialogElement).showModal();
     }
 </script>
 
 <script lang="ts">
     import { invoke } from "@tauri-apps/api";
+    import { incomes, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
     import type { Subscription } from "../../App.svelte";
-    import { subscriptions, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
+    import type { Writable } from "svelte/store";
 
     let selected = 'Month';
 
@@ -18,10 +19,10 @@
     let years = 1;
 
     function closeModal() {
-        (document.getElementById('dialog-subscriptions')! as HTMLDialogElement).close();
+        (document.getElementById('dialog-income')! as HTMLDialogElement).close();
     }
 
-    async function submit_subscription(event: HTMLFormEvent) {
+    async function submit_income(event: SubmitEvent){
         event.preventDefault();
 
         let tmp_subscription = {
@@ -33,8 +34,8 @@
             years: years
         };
 
-        invoke('add_subscription', {tmp: tmp_subscription}).then(async (new_subscription) => {
-            $subscriptions = [...$subscriptions, (new_subscription as Subscription)];
+        invoke('add_income', {tmp: tmp_subscription}).then(async (new_income) => {
+            $incomes = [...$incomes, (new_income as Subscription)];
             
             $monthly_cost = await invoke("monthly_cost");
             $eoy_cost = await invoke("eoy_cost");
@@ -47,40 +48,38 @@
     }
 </script>
 
-<dialog id="dialog-subscriptions">
-  <h2 class="title">Add new subscription</h2>
+<dialog id="dialog-income">
+  <h2 class="title">Add new Income Source</h2>
   <button
     class="close-modal"
     on:click={closeModal}>X</button
   >
-  <form id="new-subscription-form" on:submit={submit_subscription}>
+  <form id="new-income-form" on:submit={submit_income}>
     <div>
-      <label for="subscription-concept">Concept</label>
+      <label for="income-concept">Concept</label>
       <input
         type="text"
-        id="subscription-concept"
+        id="income-concept"
         placeholder="Concept"
         style="width: 90%"
-        bind:value={concept} 
-        required
+        bind:value={concept}
       />
     </div>
     <div class="container">
       <div>
-        <label for="subscription-cost">Cost</label>
+        <label for="income-cost">Amount</label>
         <input
           type="number"
-          id="subscription-cost"
-          placeholder="Cost"
+          id="income-cost"
+          placeholder="Amount"
           min="0"
           step="any"
           bind:value={amount}
-          required
         />
       </div>
       <div>
-        <label for="subscription-recurrence">Recurrence</label>
-        <select id="subscription-recurrence" name="recurrence" bind:value={selected}>
+        <label for="income-recurrence">Recurrence</label>
+        <select id="income-recurrence" name="recurrence" bind:value={selected}>
           <option value="Day">Daily</option>
           <option value="Month" selected>Monthly</option>
           <option value="Year">Yearly</option>
@@ -89,84 +88,78 @@
     </div>
     <div>
     {#if selected === 'Day'}
-      <div class="select-div" id="daily-subscription">
+      <div class="select-div" id="daily-income">
         <p>
           Every <input
             type="number"
-            id="subscription-days"
+            id="income-days"
             placeholder="days"
             min="1"
             style="width: 60px"
             bind:value={days}
-            required
           /> days
         </p>
       </div>
     {:else if selected === 'Month'}
-      <div class="select-div" id="monthly-subscription">
+      <div class="select-div" id="monthly-income">
         <p>
           The <input
             type="number"
-            id="subscription-day"
+            id="income-day"
             placeholder="day"
             min="1"
             max="31"
             style="width: 30px"
             bind:value={days}
-            required
           /> of each month
         </p>
         <p>
           Every <input
             type="number"
-            id="subscription-months"
+            id="income-months"
             placeholder="months"
             min="1"
             style="width: 60px"
             bind:value={months}
-            required
           /> months
         </p>
       </div>
     {:else if selected === 'Year'}
-      <div class="select-div" id="yearly-subscription">
+      <div class="select-div" id="yearly-income">
         <p>
           The <input
             type="number"
-            id="subscription-day-2"
+            id="income-day-2"
             placeholder="day"
             min="1"
             max="31"
             style="width: 30px"
             bind:value={days}
-            required
           />
           of month
           <input
             type="number"
-            id="subscription-month"
+            id="income-month"
             placeholder="month"
             min="1"
             style="width: 60px"
             bind:value={months}
-            required
-          />
+          /> month
         </p>
         <p>
           Every <input
             type="number"
-            id="subscription-years"
+            id="income-years"
             placeholder="years"
             min="1"
             style="width: 50px"
             bind:value={years}
-            required
           /> years
         </p>
       </div>
     {/if}
     </div>
 
-    <button type="submit">Add subscription</button>
+    <button type="submit">Add income</button>
   </form>
 </dialog>

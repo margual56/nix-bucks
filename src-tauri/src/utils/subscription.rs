@@ -42,6 +42,22 @@ impl From<TmpSubscription> for Subscription {
     }
 }
 
+impl TmpSubscription {
+    pub fn to_subscription(self, uuid: Uuid) -> Subscription {
+        Subscription {
+            uuid,
+            name: self.name,
+            cost: OrderedFloat(self.cost),
+            recurrence: Recurrence::from_simple_recurrence(
+                self.recurrence,
+                self.days,
+                self.months,
+                self.years,
+            ),
+        }
+    }
+}
+
 /// A subscription is a recurrent expense.
 #[derive(Clone, Debug, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct Subscription {
@@ -96,6 +112,24 @@ impl Subscription {
     /// Returns the cost
     pub fn cost(&self) -> f32 {
         self.cost.0
+    }
+
+    /// Converts the cost to a positive value.
+    pub fn positive(self) -> Self {
+        let mut other = self.clone();
+
+        other.cost.0 = other.cost.0.abs();
+
+        other
+    }
+
+    /// Converts the cost to a negative value.
+    pub fn negative(self) -> Self {
+        let mut other = self.clone();
+
+        other.cost.0 = -other.cost.0.abs();
+
+        other
     }
 
     /// Returns the recurrence

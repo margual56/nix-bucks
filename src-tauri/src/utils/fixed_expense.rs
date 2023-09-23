@@ -3,6 +3,14 @@ use ordered_float::OrderedFloat;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+pub struct TmpExpense {
+    pub name: String,
+    pub cost: f32,
+
+    pub date: String,
+}
+
 /// A fixed expense is an expense that is not recurrent.
 #[derive(Clone, Debug, Serialize, Deserialize, Hash, PartialEq, Eq)]
 pub struct FixedExpense {
@@ -64,6 +72,24 @@ impl FixedExpense {
     /// Returns the cost.
     pub fn cost(&self) -> f32 {
         self.cost.0
+    }
+
+    /// Converts the cost to a positive value.
+    pub fn positive(self) -> Self {
+        let mut other = self.clone();
+
+        other.cost.0 = other.cost.0.abs();
+
+        other
+    }
+
+    /// Converts the cost to a negative value.
+    pub fn negative(self) -> Self {
+        let mut other = self.clone();
+
+        other.cost.0 = -other.cost.0.abs();
+
+        other
     }
 
     /// Returns the date

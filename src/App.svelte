@@ -5,49 +5,52 @@
   import PunctualIncomeTable from "./lib/tables/PunctualIncomeTable.svelte";
 
   import NewSubscriptionDialog from "./lib/dialogs/NewSubscriptionDialog.svelte";
+  import NewIncomeDialog from "./lib/dialogs/NewIncomeDialog.svelte";
+  import NewFixedExpenseDialog from "./lib/dialogs/NewFixedExpenseDialog.svelte";
+  import NewPunctualIncomeDialog from "./lib/dialogs/NewPunctualIncomeDialog.svelte";
 
   import Stats from "./lib/Stats.svelte";
   import TabButton from "./lib/TabButton.svelte";
+
+  import {invoke} from "@tauri-apps/api/tauri";
 
   let selected_tab = 0;
 </script>
 
 <script context="module" lang="ts">
-  async function updateValue(function_name: string, element_id: string) {
-    invoke(function_name).then(async (amount) => {
-      invoke("format_money", { amount: amount }).then(value => {
-        let element = document.getElementById(element_id)!;
-        element.innerText = value + "";
-  
-        if(amount as number < 0) {
-          element.classList.add("negative");
-        }else{
-          element.classList.remove("negative");
-        }
+    export interface Subscription {
+        uuid: string,
+        name: string,
+        cost: number,
+        recurrence: string,
+    };
+
+    export interface Punctual {
+        uuid: string,
+        name: string,
+        cost: number,
+        date: string,
+    };
+
+    export function formatDate(date: Date): string{
+        var d = date.getDate();
+        var m = date.getMonth() + 1; //Month from 0 to 11
+        var y = date.getFullYear();
+        return '' + (d <= 9 ? '0' + d : d) + '/' + (m<=9 ? '0' + m : m) + '/' + y;
+    }
+
+    export async function updateValue(function_name: string, element_id: string) {
+      invoke(function_name).then(async (value) => {
+          let element = document.getElementById(element_id)!;
+          element.innerText = value + "";
+    
+          if(value as number < 0) {
+            element.classList.add("negative");
+          }else{
+            element.classList.remove("negative");
+          }
       });
-    });
-  }
-  
-  async function updateTable(function_name: string, table_id: string) {
-    invoke(function_name).then((value) => {
-      let table = (document.getElementById(table_id)! as HTMLTableElement);
-  
-      table.tBodies[0].innerHTML = value + "";
-  
-      document.querySelectorAll(".delete-button").forEach((element) => {
-        element.addEventListener("click", (event) => {
-          let element = (event.target as HTMLButtonElement);
-          let uuid = element.dataset.uuid!;
-          let function_name = element.dataset.function!;
-          let table_id = element.dataset.table!;
-  
-          invoke("delete_uuid", {uuid: uuid}).then(() => {
-            updateTable(function_name, table_id);
-          });
-        });
-      });
-    })
-  }
+    }
 </script>
 
 <main class="container">
@@ -100,46 +103,10 @@
   <div class="footer">
     <Stats/>
   </div>
+
+  <NewSubscriptionDialog/>
+  <NewIncomeDialog />
+  <NewFixedExpenseDialog />
+  <NewPunctualIncomeDialog />
 </main>
 
-<NewSubscriptionDialog/>
-<dialog id="dialog-fixed-expense">
-  <h2 class="title">Add new fixed expense</h2>
-  <button
-    class="close-modal"
-    onclick="document.getElementById('dialog-fixed-expense').close()">X</button
-  >
-  <form id="new-fixed-expense-form">
-    <div>
-      <label for="expense-concept">Concept</label>
-      <input
-        type="text"
-        id="expense-concept"
-        placeholder="Concept"
-        style="width: 90%"
-      />
-    </div>
-    <div class="container" style="margin-bottom: 1em">
-      <div>
-        <label for="expense-cost">Cost</label>
-        <input
-          type="number"
-          id="expense-cost"
-          placeholder="Cost"
-          min="1"
-          step="any"
-        />
-      </div>
-      <div>
-        <label for="expense-date">Date</label>
-        <input
-          type="date"
-          id="expense-date"
-          name="expense-date"
-          style="height: 25px"
-        />
-      </div>
-    </div>
-    <button type="submit">Add fixed expense</button>
-  </form>
-</dialog>
