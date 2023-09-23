@@ -2,7 +2,7 @@
     import { openModal } from "../dialogs/NewPunctualIncomeDialog.svelte";
     import { invoke } from "@tauri-apps/api/tauri";
     import type { Punctual } from "../../App.svelte";
-    import { p_incomes } from "../store.ts";
+    import { p_incomes, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
     import { onMount } from "svelte";
 
     onMount(async () => {
@@ -10,8 +10,15 @@
     });
 
     async function delete_p_income(uuid: string) {
-        invoke("delete_uuid", {uuid: uuid});
-        $p_incomes = $p_incomes.filter((income) => income.uuid !== uuid);
+        invoke("delete_uuid", {uuid: uuid}).then(async () => {
+            $monthly_cost = await invoke("monthly_cost");
+            $eoy_cost = await invoke("eoy_cost");
+            $eoy_income = await invoke("eoy_income");
+            $eoy_balance = await invoke("eoy_balance");
+            $eom_balance = await invoke("eom_balance");
+
+            $p_incomes = $p_incomes.filter((income) => income.uuid !== uuid);
+        });
     }
 </script>
 

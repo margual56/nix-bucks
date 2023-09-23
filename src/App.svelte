@@ -103,9 +103,10 @@
   <div class="footer">
     <Stats/>
   </div>
+
+  <NewSubscriptionDialog/>
+  <NewIncomeDialog />
+  <NewFixedExpenseDialog />
+  <NewPunctualIncomeDialog />
 </main>
 
-<NewSubscriptionDialog/>
-<NewIncomeDialog />
-<NewFixedExpenseDialog />
-<NewPunctualIncomeDialog />

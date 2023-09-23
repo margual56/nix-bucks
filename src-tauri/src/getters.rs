@@ -1,9 +1,9 @@
 use uuid::Uuid;
 
+use crate::format_money;
 use crate::FixedExpense;
 use crate::Subscription;
 use crate::Wrapper;
-use crate::format_money;
 
 #[tauri::command]
 pub fn get_savings(app: tauri::State<Wrapper>) -> String {
@@ -56,16 +56,19 @@ impl From<Subscription> for ExportedSubscription {
 
 #[tauri::command]
 pub fn get_subscriptions(app: tauri::State<Wrapper>) -> Vec<ExportedSubscription> {
-    let mut arr = app.0.lock().unwrap().subscriptions.clone()
+    let mut arr = app
+        .0
+        .lock()
+        .unwrap()
+        .subscriptions
+        .clone()
         .into_values()
-        .map(|s|
-             ExportedSubscription {
-                 uuid: s.uuid(),
-                 name: String::from(s.name()),
-                 cost: format_money(-s.cost()),
-                 recurrence: s.recurrence().to_string(),
-             }
-        )
+        .map(|s| ExportedSubscription {
+            uuid: s.uuid(),
+            name: String::from(s.name()),
+            cost: format_money(-s.cost()),
+            recurrence: s.recurrence().to_string(),
+        })
         .collect::<Vec<ExportedSubscription>>();
     arr.sort_by(|a, b| a.name.cmp(&b.name));
 
@@ -74,16 +77,19 @@ pub fn get_subscriptions(app: tauri::State<Wrapper>) -> Vec<ExportedSubscription
 
 #[tauri::command]
 pub fn get_incomes(app: tauri::State<Wrapper>) -> Vec<ExportedSubscription> {
-    let mut arr = app.0.lock().unwrap().incomes.clone()
+    let mut arr = app
+        .0
+        .lock()
+        .unwrap()
+        .incomes
+        .clone()
         .into_values()
-        .map(|s|
-             ExportedSubscription {
-                 uuid: s.uuid(),
-                 name: String::from(s.name()),
-                 cost: format_money(s.cost()),
-                 recurrence: s.recurrence().to_string(),
-             }
-        )
+        .map(|s| ExportedSubscription {
+            uuid: s.uuid(),
+            name: String::from(s.name()),
+            cost: format_money(s.cost()),
+            recurrence: s.recurrence().to_string(),
+        })
         .collect::<Vec<ExportedSubscription>>();
     arr.sort_by(|a, b| a.name.cmp(&b.name));
 
@@ -104,23 +110,26 @@ impl From<FixedExpense> for ExportedExpense {
             uuid: value.uuid(),
             name: String::from(value.name()),
             cost: format_money(value.cost()),
-            date: value.date.to_string()
+            date: value.date.to_string(),
         }
     }
 }
 
 #[tauri::command]
 pub fn get_punctual_incomes(app: tauri::State<Wrapper>) -> Vec<ExportedExpense> {
-    let mut arr = app.0.lock().unwrap().p_incomes.clone()
+    let mut arr = app
+        .0
+        .lock()
+        .unwrap()
+        .p_incomes
+        .clone()
         .into_values()
-        .map(|i|
-             ExportedExpense {
-                 uuid: i.uuid(),
-                 name: String::from(i.name()),
-                 cost: format_money(i.cost()),
-                 date: i.date().format("%d/%m/%Y").to_string(),
-             }
-        )
+        .map(|i| ExportedExpense {
+            uuid: i.uuid(),
+            name: String::from(i.name()),
+            cost: format_money(i.cost()),
+            date: i.date().format("%d/%m/%Y").to_string(),
+        })
         .collect::<Vec<ExportedExpense>>();
 
     arr.sort_by(|a, b| a.name.cmp(&b.name));
@@ -130,16 +139,19 @@ pub fn get_punctual_incomes(app: tauri::State<Wrapper>) -> Vec<ExportedExpense> 
 
 #[tauri::command]
 pub fn get_punctual_expenses(app: tauri::State<Wrapper>) -> Vec<ExportedExpense> {
-    let mut arr = app.0.lock().unwrap().fixed_expenses.clone()
+    let mut arr = app
+        .0
+        .lock()
+        .unwrap()
+        .fixed_expenses
+        .clone()
         .into_values()
-        .map(|i|
-             ExportedExpense {
-                 uuid: i.uuid(),
-                 name: String::from(i.name()),
-                 cost: format_money(-i.cost()),
-                 date: i.date().format("%d/%m/%Y").to_string(),
-             }
-        )
+        .map(|i| ExportedExpense {
+            uuid: i.uuid(),
+            name: String::from(i.name()),
+            cost: format_money(-i.cost()),
+            date: i.date().format("%d/%m/%Y").to_string(),
+        })
         .collect::<Vec<ExportedExpense>>();
 
     arr.sort_by(|a, b| a.name.cmp(&b.name));

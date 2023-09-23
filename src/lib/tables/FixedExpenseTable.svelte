@@ -1,8 +1,8 @@
 <script lang="ts">
     import { openModal } from "../dialogs/NewFixedExpenseDialog.svelte";
-    import { p_expenses } from "../store.ts";
+    import { p_expenses, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
     import { onMount } from "svelte";
-    import { invoke } from "@tauri-apps/api/tauri";
+    import { invoke }  from "@tauri-apps/api/tauri";
     import type { Punctual } from "../../App.svelte";
 
     onMount(async () => {
@@ -12,8 +12,29 @@
     });
 
     async function delete_p_expense(uuid: string) {
-        invoke("delete_uuid", {uuid: uuid});
-        $p_expenses = $p_expenses.filter((expense) => expense.uuid !== uuid);
+        invoke("delete_uuid", {uuid: uuid}).then(() => {
+            invoke("monthly_cost").then((value) => {
+                $monthly_cost = value
+            });
+            invoke("eoy_cost").then((value) => {
+                $eoy_cost = value
+            });
+;
+            invoke("eoy_income").then((value) => {
+                $eoy_income = value
+            });
+;
+            invoke("eoy_balance").then((value) => {
+                $eoy_balance = value
+            });
+;
+            invoke("eom_balance").then((value) => {
+                $eom_balance = value
+            });
+;
+
+            $p_expenses = $p_expenses.filter((expense) => expense.uuid !== uuid);
+        });
     }
 </script>
 

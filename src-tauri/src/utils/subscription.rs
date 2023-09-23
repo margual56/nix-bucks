@@ -48,7 +48,12 @@ impl TmpSubscription {
             uuid,
             name: self.name,
             cost: OrderedFloat(self.cost),
-            recurrence: Recurrence::from_simple_recurrence(self.recurrence, self.days, self.months, self.years),
+            recurrence: Recurrence::from_simple_recurrence(
+                self.recurrence,
+                self.days,
+                self.months,
+                self.years,
+            ),
         }
     }
 }
@@ -112,7 +117,7 @@ impl Subscription {
     /// Converts the cost to a positive value.
     pub fn positive(self) -> Self {
         let mut other = self.clone();
-        
+
         other.cost.0 = other.cost.0.abs();
 
         other
@@ -121,7 +126,7 @@ impl Subscription {
     /// Converts the cost to a negative value.
     pub fn negative(self) -> Self {
         let mut other = self.clone();
-        
+
         other.cost.0 = -other.cost.0.abs();
 
         other

@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use nix_bucks::{App, Wrapper, getters::*, tables::*, TmpSubscription, Subscription, TmpExpense, FixedExpense};
+use nix_bucks::{getters::*, tables::*, App, TmpExpense, TmpSubscription, Wrapper};
 use std::sync::Mutex;
 use uuid::Uuid;
 
@@ -15,13 +15,13 @@ fn delete_uuid(app: tauri::State<Wrapper>, uuid: Uuid) {
 }
 
 #[tauri::command]
-fn add_subscription(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> ExportedSubscription{
+fn add_subscription(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> ExportedSubscription {
     let mut mut_app = app.0.lock().unwrap();
 
     *mut_app = mut_app.clone();
-    
+
     let subscription = mut_app.add_subscription(tmp);
-    
+
     mut_app.update().save_data();
 
     subscription.negative().into()
@@ -34,7 +34,7 @@ fn add_income(app: tauri::State<Wrapper>, tmp: TmpSubscription) -> ExportedSubsc
     *mut_app = mut_app.clone();
 
     let subscription = mut_app.add_income(tmp);
-    
+
     mut_app.update().save_data();
 
     subscription.positive().into()
@@ -47,7 +47,7 @@ fn add_punctual_expense(app: tauri::State<Wrapper>, tmp: TmpExpense) -> Exported
     *mut_app = mut_app.clone();
 
     let p_expense = mut_app.add_p_expense(tmp);
-    
+
     mut_app.update().save_data();
 
     p_expense.negative().into()
@@ -60,7 +60,7 @@ fn add_punctual_income(app: tauri::State<Wrapper>, tmp: TmpExpense) -> ExportedE
     *mut_app = mut_app.clone();
 
     let p_income = mut_app.add_p_income(tmp);
-    
+
     mut_app.update().save_data();
 
     p_income.positive().into()
