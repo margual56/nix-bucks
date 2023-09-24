@@ -42,7 +42,7 @@
     <td>
         <button class="delete-button" data-uuid={income.uuid}
                 on:click={() => delete_income(income.uuid)}>
-            <img src="/src/assets/icon-delete.svg" alt="Delete" width="17" height="17" />
+            <img src="/icon-delete.svg" alt="Delete" width="17" height="17" />
             Delete
         </button>
   </tr>
@@ -50,6 +50,6 @@
   <tbody />
 </table>
 <button class="add-entry" id="add-income" on:click={openModal}>
-  <img src="/src/assets/icon-add.svg" alt="" width="30" />
+  <img src="/icon-add.svg" alt="" width="30" />
   Add income stream
 </button>

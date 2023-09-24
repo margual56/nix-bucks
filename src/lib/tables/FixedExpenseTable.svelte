@@ -7,31 +7,28 @@
 
     onMount(async () => {
         $p_expenses = await invoke("get_punctual_expenses") as Punctual[];
-
-        console.log($p_expenses);
     });
 
     async function delete_p_expense(uuid: string) {
         invoke("delete_uuid", {uuid: uuid}).then(() => {
             invoke("monthly_cost").then((value) => {
-                $monthly_cost = value
+                $monthly_cost = (value as string);
             });
             invoke("eoy_cost").then((value) => {
-                $eoy_cost = value
+                $eoy_cost = (value as string);
             });
-;
+
             invoke("eoy_income").then((value) => {
-                $eoy_income = value
+                $eoy_income = (value as string);
             });
-;
+
             invoke("eoy_balance").then((value) => {
-                $eoy_balance = value
+                $eoy_balance = (value as string);
             });
-;
+
             invoke("eom_balance").then((value) => {
-                $eom_balance = value
+                $eom_balance = (value as string);
             });
-;
 
             $p_expenses = $p_expenses.filter((expense) => expense.uuid !== uuid);
         });
@@ -63,8 +60,8 @@
                 <td>{p_expense.cost}</td>
                 <td>{p_expense.date}</td>
                 <td>
-                    <button class="delete-button" data-uuid={p_expense.uuid} on:click={delete_p_expense(p_expense.uuid)}>
-                        <img src="/src/assets/icon-delete.svg" alt="Delete" width="17" height="17" />
+                    <button class="delete-button" data-uuid={p_expense.uuid} on:click={() => delete_p_expense(p_expense.uuid)}>
+                        <img src="/icon-delete.svg" alt="Delete" width="17" height="17" />
                         Delete
                     </button>
                 </td>
@@ -74,6 +71,6 @@
   <tbody />
 </table>
 <button class="add-entry" id="add-fixed-expense" on:click={openModal}>
-  <img src="/src/assets/icon-add.svg" alt="" width="30" />
+  <img src="/icon-add.svg" alt="" width="30" />
   Add fixed expense
 </button>

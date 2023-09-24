@@ -63,7 +63,7 @@
 
 <main class="container">
   <div class="header">
-    <img id="logo" src="/src/assets/icon-logo.svg" alt="" width="170" />
+    <img id="logo" src="/icon-logo.svg" alt="" width="170" />
 
     <div class="vertical-container-right">
       <TabButton

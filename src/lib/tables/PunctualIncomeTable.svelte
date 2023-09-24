@@ -48,7 +48,7 @@
                 <td>{p_income.cost}</td>
                 <td>{p_income.date}</td>
                 <td>
-                    <button class="delete-button" data-uuid={p_income.uuid} on:click={delete_p_income(p_income.uuid)}>
+                    <button class="delete-button" data-uuid={p_income.uuid} on:click={() => delete_p_income(p_income.uuid)}>
                         Delete
                     </button>
                 </td>
@@ -58,6 +58,6 @@
   <tbody />
 </table>
 <button class="add-entry" id="add-punctual-income" on:click={openModal}>
-  <img src="/src/assets/icon-add.svg" alt="" width="30" />
+  <img src="/icon-add.svg" alt="" width="30" />
   Add punctual income
 </button>

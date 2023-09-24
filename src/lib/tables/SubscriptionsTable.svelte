@@ -2,8 +2,7 @@
     import { openModal } from "../dialogs/NewSubscriptionDialog.svelte";
     import { onMount } from "svelte";
     import { invoke } from "@tauri-apps/api/tauri";
-    import type Subscription from "../../App.svelte";
-    import { subscriptions, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
+    import { type Subscription, subscriptions, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
 
     onMount(async () => {
         $subscriptions = (await invoke("get_subscriptions") as Subscription[]);
@@ -49,7 +48,7 @@
         <td>{subscription.recurrence}</td>
         <td>
         <button class="delete-button" data-uuid={subscription.uuid} on:click={() => delete_subscription(subscription.uuid)}>
-            <img src="/src/assets/icon-delete.svg" alt="Delete" width="17" height="17" />
+            <img src="/icon-delete.svg" alt="Delete" width="17" height="17" />
             Delete
         </button>
         </td>
@@ -60,6 +59,6 @@
 </table>
 
 <button class="add-entry" id="add-subscription" on:click={openModal}>
-  <img src="/src/assets/icon-add.svg" alt="" width="30" />
+  <img src="/icon-add.svg" alt="" width="30" />
   Add subscription
     </button>
