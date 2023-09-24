@@ -14,6 +14,7 @@ export interface Punctual {
     date: string,
 };
 
+export const initial_savings: Writable<string> = writable("Loading...");
 export const subscriptions: Writable<Subscription[]> = writable([]);
 export const incomes: Writable<Subscription[]> = writable([]);
 export const p_incomes: Writable<Punctual[]> = writable([]);

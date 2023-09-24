@@ -7,8 +7,8 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "nix-bucks-svelte",
-    "version": "0.0.0"
+    "productName": "nix-bucks",
+    "version": "0.1.0"
   },
   "tauri": {
     "allowlist": {
@@ -21,7 +21,7 @@
     "bundle": {
       "active": true,
       "targets": "all",
-      "identifier": "com.tauri.dev",
+      "identifier": "com.margual56.NixBucks",
       "icon": [
         "icons/32x32.png",
         "icons/128x128.png",
@@ -37,9 +37,9 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "nix-bucks-svelte",
-        "width": 800,
-        "height": 600
+        "title": "Nix Bucks",
+        "width": 1300,
+        "height": 700
       }
     ]
   }

@@ -1,20 +1,28 @@
 <script lang="ts">
-  import SubscriptionsTable from "./lib/tables/SubscriptionsTable.svelte";
-  import FixedExpenseTable from "./lib/tables/FixedExpenseTable.svelte";
-  import IncomeTable from "./lib/tables/IncomeTable.svelte";
-  import PunctualIncomeTable from "./lib/tables/PunctualIncomeTable.svelte";
+    import SubscriptionsTable from "./lib/tables/SubscriptionsTable.svelte";
+    import FixedExpenseTable from "./lib/tables/FixedExpenseTable.svelte";
+    import IncomeTable from "./lib/tables/IncomeTable.svelte";
+    import PunctualIncomeTable from "./lib/tables/PunctualIncomeTable.svelte";
+    
+    import NewSubscriptionDialog from "./lib/dialogs/NewSubscriptionDialog.svelte";
+    import NewIncomeDialog from "./lib/dialogs/NewIncomeDialog.svelte";
+    import NewFixedExpenseDialog from "./lib/dialogs/NewFixedExpenseDialog.svelte";
+    import NewPunctualIncomeDialog from "./lib/dialogs/NewPunctualIncomeDialog.svelte";
+    
+    import Stats from "./lib/Stats.svelte";
+    import TabButton from "./lib/TabButton.svelte";
+    
+    import {invoke} from "@tauri-apps/api/tauri";
+    import { initial_savings } from "./lib/store.ts";
+    import { onMount } from "svelte";
+    
+    let selected_tab = 0;
 
-  import NewSubscriptionDialog from "./lib/dialogs/NewSubscriptionDialog.svelte";
-  import NewIncomeDialog from "./lib/dialogs/NewIncomeDialog.svelte";
-  import NewFixedExpenseDialog from "./lib/dialogs/NewFixedExpenseDialog.svelte";
-  import NewPunctualIncomeDialog from "./lib/dialogs/NewPunctualIncomeDialog.svelte";
-
-  import Stats from "./lib/Stats.svelte";
-  import TabButton from "./lib/TabButton.svelte";
-
-  import {invoke} from "@tauri-apps/api/tauri";
-
-  let selected_tab = 0;
+    onMount(() => {
+        invoke("get_savings").then((value) => {
+            $initial_savings = (value as string);
+        });
+    });
 </script>
 
 <script context="module" lang="ts">
@@ -86,7 +94,7 @@
   </div>
 
   <div class="main">
-    <h3 id="savings">0.0 €</h3>
+    <h3 id="savings">Initial savings:&nbsp;<span class:negative={$initial_savings.includes("-")}>{$initial_savings}</span></h3>
     <div class="tab-content">
       {#if selected_tab === 0}
         <SubscriptionsTable/>

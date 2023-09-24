@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { updateValue } from "../App.svelte";
     import { invoke } from "@tauri-apps/api/tauri";
 	import { onMount } from 'svelte';
     import { monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "./store.ts";

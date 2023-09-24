@@ -7,10 +7,6 @@
     font-weight: light;
 }
 
-#savings::before {
-    content: "Initial savings: ";
-}
-
 .container {
     margin: 0;
     padding-top: 4vh;

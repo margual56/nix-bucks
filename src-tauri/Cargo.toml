@@ -1,10 +1,10 @@
 [package]
 name = "nix-bucks"
-version = "0.0.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+version = "0.1.0"
+description = "A simple budgeting app"
+authors = ["Marcos Gutiérrez <margual56@gmail.com"]
+license = "GPL-3.0"
+repository = "https://github.com/margual56/nix-bucks"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
