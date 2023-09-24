@@ -1,7 +1,11 @@
 # NixBucks
 A simple budgeting app
 
+![image](https://github.com/margual56/nix-bucks/assets/30444886/01f2485d-2153-4512-93a5-61e31d42f929)
+
 # Install
+If you are on Linux, you can download the Appimage from the latest release ([click here](https://github.com/margual56/nix-bucks/releases)).
+Otherwise, you can install from the .deb package.
 
 ## About windows
 "Smart Screen" will yell at you when you try to open this program, because it is not signed by a "trusted" source.
