@@ -1,7 +1,7 @@
 # NixBucks
 A simple budgeting app
 
-![image](https://github.com/margual56/nix-bucks/assets/30444886/01f2485d-2153-4512-93a5-61e31d42f929)
+![Screenshot_20230925_095442](https://github.com/margual56/nix-bucks/assets/30444886/85addccb-8df7-4652-b33d-92161c61c80a)
 
 # Install
 If you are on Linux, you can download the Appimage from the latest release ([click here](https://github.com/margual56/nix-bucks/releases)).
