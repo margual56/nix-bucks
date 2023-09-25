@@ -86,6 +86,14 @@ impl Recurrence {
             SimpleRecurrence::Year => Self::Year(days, months, years),
         }
     }
+
+    pub fn times_in_a_year(self) -> Option<f32> {
+        match self {
+            Self::Day(days) => Some(365.0 / days as f32),
+            Self::Month(_, months) => Some(12.0 / months as f32),
+            Self::Year(_, _, years) => Some(1.0 / years as f32),
+        }
+    }
 }
 
 impl Display for Recurrence {

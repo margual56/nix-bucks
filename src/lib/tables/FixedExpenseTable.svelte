@@ -1,6 +1,6 @@
 <script lang="ts">
     import { openModal } from "../dialogs/NewFixedExpenseDialog.svelte";
-    import { p_expenses, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
+    import { p_expenses, monthly_cost, yearly_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
     import { onMount } from "svelte";
     import { invoke }  from "@tauri-apps/api/tauri";
     import type { Punctual } from "../../App.svelte";
@@ -14,8 +14,8 @@
             invoke("monthly_cost").then((value) => {
                 $monthly_cost = (value as string);
             });
-            invoke("eoy_cost").then((value) => {
-                $eoy_cost = (value as string);
+            invoke("yearly_cost").then((value) => {
+                $yearly_cost = value
             });
 
             invoke("eoy_income").then((value) => {

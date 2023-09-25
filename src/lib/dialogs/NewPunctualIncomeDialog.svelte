@@ -6,7 +6,7 @@
 
 <script lang="ts">
     import { invoke } from "@tauri-apps/api";
-    import { p_incomes, monthly_cost, eoy_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
+    import { p_incomes, monthly_cost, yearly_cost, eoy_income, eoy_balance, eom_balance } from "../store.ts";
     import { formatDate } from "../../App.svelte";
 
     let concept = "";
@@ -30,7 +30,7 @@
             $p_incomes = [...$p_incomes, new_p_income];
             
             $monthly_cost = await invoke("monthly_cost");
-            $eoy_cost = await invoke("eoy_cost");
+            $yearly_cost= await invoke("yearly_cost");
             $eoy_income = await invoke("eoy_income");
             $eoy_balance = await invoke("eoy_balance");
             $eom_balance = await invoke("eom_balance");

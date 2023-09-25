@@ -21,6 +21,7 @@ export const p_incomes: Writable<Punctual[]> = writable([]);
 export const p_expenses: Writable<Punctual[]> = writable([]);
 
 export const monthly_cost: Writable<string> = writable("Loading...");
+export const yearly_cost: Writable<string> = writable("Loading...");
 export const eoy_cost: Writable<string> = writable("Loading...");
 export const eoy_income: Writable<string> = writable("Loading...");
 export const eoy_balance: Writable<string> = writable("Loading...");

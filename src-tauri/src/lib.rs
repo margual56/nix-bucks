@@ -234,6 +234,26 @@ impl App {
 
     /// Returns the total cost of all subscriptions in a whole year.
     pub fn yearly_costs(&self) -> f32 {
+        let mut cost = 0.0;
+
+        for subscription in self.subscriptions.clone().into_values() {
+            cost += subscription.cost()
+                / subscription
+                    .recurrence()
+                    .times_in_a_year()
+                    .unwrap_or(1.0 / 12.0);
+        }
+
+        for expense in self.fixed_expenses.clone().into_values() {
+            if expense.date().year_ce().1 == Utc::now().year_ce().1 {
+                cost += expense.cost();
+            }
+        }
+
+        cost
+    }
+
+    pub fn eoy_costs(&self) -> f32 {
         cost_to_year_end(
             self.subscriptions.clone().into_values().collect(),
             self.fixed_expenses.clone().into_values().collect(),
@@ -260,7 +280,7 @@ impl App {
         }
 
         for subscription in self.subscriptions.values() {
-            amount -= subscription.cost();
+            amount -= subscription.cost_per_month();
         }
 
         amount
@@ -274,6 +294,6 @@ impl App {
     }
 
     pub fn yearly_balance(&self) -> f32 {
-        self.yearly_income() - self.yearly_costs()
+        self.yearly_income() - self.eoy_costs()
     }
 }

@@ -16,8 +16,13 @@ pub fn monthly_cost(app: tauri::State<Wrapper>) -> String {
 }
 
 #[tauri::command]
-pub fn eoy_cost(app: tauri::State<Wrapper>) -> String {
+pub fn yearly_cost(app: tauri::State<Wrapper>) -> String {
     format_money(-app.0.lock().unwrap().yearly_costs())
+}
+
+#[tauri::command]
+pub fn eoy_cost(app: tauri::State<Wrapper>) -> String {
+    format_money(-app.0.lock().unwrap().eoy_costs())
 }
 
 #[tauri::command]

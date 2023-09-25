@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "nix-bucks",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "tauri": {
     "allowlist": {
@@ -39,7 +39,7 @@
         "resizable": true,
         "title": "Nix Bucks",
         "width": 1300,
-        "height": 700
+        "height": 750
       }
     ]
   }

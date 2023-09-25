@@ -76,6 +76,7 @@ fn main() {
             get_punctual_incomes,
             get_punctual_expenses,
             monthly_cost,
+            yearly_cost,
             eoy_cost,
             eoy_income,
             eoy_balance,
