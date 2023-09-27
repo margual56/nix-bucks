@@ -238,7 +238,7 @@ impl App {
 
         for subscription in self.subscriptions.clone().into_values() {
             cost += subscription.cost()
-                / subscription
+                * subscription
                     .recurrence()
                     .times_in_a_year()
                     .unwrap_or(1.0 / 12.0);

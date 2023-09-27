@@ -141,7 +141,7 @@ pub fn times_until(recurrence: Recurrence, from: NaiveDate, to: NaiveDate) -> u3
         }
         Recurrence::Month(day, each_months) => {
             // Count the amount of times the day "day" has passed since today to the target date
-            let mut start = from.clone().with_day(day as u32).unwrap();
+            let mut start = from.clone().with_day(day as u32).unwrap_or(from.clone().with_day(day as u32 - 1).unwrap());
 
             let mut times: u32 = 0;
 
