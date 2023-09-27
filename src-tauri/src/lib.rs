@@ -19,7 +19,13 @@ const ORGANIZATION: &str = "margual56";
 const APPLICATION: &str = "NixBucks";
 
 pub fn format_money(amount: f32) -> String {
-    return format!("{:+.2} €", amount);
+    if amount == 0.0 {
+        // This is to avoid the whole "- 0.0" debacle, because of floating
+        // point precision.
+        "0.00 €".to_string() 
+    } else {
+        format!("{:+.2} €", amount)
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -56,7 +62,17 @@ impl Default for App {
 
             path.read_to_string(&mut buffer).unwrap();
 
-            serde_json::from_str::<Self>(&buffer).unwrap().update()
+            serde_json::from_str::<Self>(&buffer)
+                .unwrap_or(Self {
+                    initial_savings: 0.0,
+                    subscriptions: HashMap::new(),
+                    fixed_expenses: HashMap::new(),
+                    incomes: HashMap::new(),
+                    p_incomes: HashMap::new(),
+                    dismissed_ad: false,
+                    lang: String::from("en"),
+                })
+                .update()
         } else {
             println!("Directory not found, returning default value");
             Self {
