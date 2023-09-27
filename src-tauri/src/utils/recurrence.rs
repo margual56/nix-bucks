@@ -99,10 +99,10 @@ impl Recurrence {
 impl Display for Recurrence {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Day(days) => write!(f, "Each {} days", days),
-            Self::Month(day, months) => write!(f, "Each {} months on day {}", months, day),
+            Self::Day(days) => write!(f, "Every {} day(s)", days),
+            Self::Month(day, months) => write!(f, "Every {} month(s) on day {}", months, day),
             Self::Year(day, month, years) => {
-                write!(f, "Each {} years on day {} of month {}", years, day, month)
+                write!(f, "Every {} year(s) on day {} of month {}", years, day, month)
             }
         }
     }
