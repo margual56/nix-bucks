@@ -1,10 +1,12 @@
 mod fixed_expense;
 mod recurrence;
 mod subscription;
+mod locale;
 
 pub use fixed_expense::{FixedExpense, TmpExpense};
 pub use recurrence::{times_until, Recurrence, SimpleRecurrence};
 pub use subscription::{Subscription, TmpSubscription};
+pub use locale::Locale;
 
 mod tests {
     use chrono::NaiveDate;

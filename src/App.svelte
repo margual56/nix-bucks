@@ -15,14 +15,25 @@
     import {invoke} from "@tauri-apps/api/tauri";
     import { initial_savings } from "./lib/store.ts";
     import { onMount } from "svelte";
+
+    import { t, locale, locales } from "./i18n";
     
     let selected_tab = 0;
+
 
     onMount(() => {
         invoke("get_savings").then((value) => {
             $initial_savings = (value as string);
         });
+
+        invoke("get_locale").then((value) => {
+            $locale = (value as string);
+        });
     });
+
+    $: ($locale) => {
+        invoke("set_locale", {locale: $locale});
+    };
 </script>
 
 <script context="module" lang="ts">
@@ -68,25 +79,25 @@
     <div class="vertical-container-right">
       <TabButton
         id={"subscriptions"}
-        text={"Subscriptions"}
+        text={$t("subscriptions")}
         tab={0}
         bind:selected_tab={selected_tab}
       />
       <TabButton
         id={"fixed_expenses"}
-        text={"Fixed Expenses"}
+        text={$t("fixed_expenses")}
         tab={1}
         bind:selected_tab={selected_tab}
       />
       <TabButton
         id={"income"}
-        text={"Income"}
+        text={$t("income")}
         tab={2}
         bind:selected_tab={selected_tab}
       />
       <TabButton
         id={"punctual_income"}
-        text={"Punctual Income"}
+        text={$t("punctual_income")}
         tab={3}
         bind:selected_tab={selected_tab}
       />

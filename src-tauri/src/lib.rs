@@ -2,7 +2,7 @@ pub mod getters;
 pub mod tables;
 mod utils;
 
-pub use utils::{FixedExpense, Recurrence, Subscription, TmpExpense, TmpSubscription};
+pub use utils::{FixedExpense, Recurrence, Subscription, TmpExpense, TmpSubscription, Locale};
 
 pub struct Wrapper(pub Mutex<App>);
 
@@ -30,7 +30,7 @@ pub struct App {
     pub fixed_expenses: HashMap<Uuid, FixedExpense>,
     pub p_incomes: HashMap<Uuid, FixedExpense>,
     pub dismissed_ad: bool,
-    pub lang: String,
+    pub lang: Locale,
 }
 
 impl Default for App {
@@ -47,7 +47,7 @@ impl Default for App {
                         incomes: HashMap::new(),
                         p_incomes: HashMap::new(),
                         dismissed_ad: false,
-                        lang: String::from("en"),
+                        lang: Locale::English,
                     };
                 }
             };
@@ -66,7 +66,7 @@ impl Default for App {
                 incomes: HashMap::new(),
                 p_incomes: HashMap::new(),
                 dismissed_ad: false,
-                lang: String::from("en"),
+                lang: Locale::English,
             }
         }
     }
@@ -132,6 +132,14 @@ impl App {
         app.save_data();
 
         app.clone()
+    }
+
+    pub fn locale(&self) -> Locale {
+        self.lang
+    }
+
+    pub fn set_locale(self, locale: Locale) -> Self {
+        Self { lang: locale, ..self }
     }
 
     pub fn remove_from_uuid(self, uuid: Uuid) -> Self {

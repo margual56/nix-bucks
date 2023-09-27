@@ -1,7 +1,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use nix_bucks::{getters::*, tables::*, App, TmpExpense, TmpSubscription, Wrapper};
+use nix_bucks::{getters::*, tables::*, App, TmpExpense, TmpSubscription, Wrapper, Locale};
 use std::sync::Mutex;
 use uuid::Uuid;
 
@@ -66,10 +66,26 @@ fn add_punctual_income(app: tauri::State<Wrapper>, tmp: TmpExpense) -> ExportedE
     p_income.positive().into()
 }
 
+#[tauri::command]
+fn get_locale(app: tauri::State<Wrapper>) -> Locale {
+    app.0.lock().unwrap().locale()
+}
+
+#[tauri::command]
+fn set_locale(app: tauri::State<Wrapper>, locale: Locale) {
+    let mut my_app = app.0.lock().unwrap();
+
+    *my_app = my_app.clone().set_locale(locale);
+
+    my_app.save_data();
+}
+
 fn main() {
     tauri::Builder::default()
         .manage(Wrapper(Mutex::new(App::default())))
         .invoke_handler(tauri::generate_handler![
+            get_locale,
+            set_locale,
             get_savings,
             get_subscriptions,
             get_incomes,
