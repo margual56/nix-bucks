@@ -1,6 +1,6 @@
 [package]
 name = "nix-bucks"
-version = "0.1.1"
+version = "0.1.2"
 description = "A simple budgeting app"
 authors = ["Marcos Gutiérrez Alonso <margual56@gmail.com>"]
 license = "GPL-3.0"

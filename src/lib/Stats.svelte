@@ -21,7 +21,7 @@
     <p class="amount" class:negative={$monthly_cost.includes("-")}>{$monthly_cost}</p>
   </div>
   <div class="card">
-    <img src="/src/assets/icon-arrowup.svg" alt="" width="32" height="32" />
+    <img src="/icon-arrowup.svg" alt="" width="32" height="32" />
     <p class="title">Total average cost per year</p>
     <p class="amount" class:negative={$yearly_cost.includes("-")}>{$yearly_cost}</p>
   </div>
