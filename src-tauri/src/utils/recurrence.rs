@@ -12,7 +12,6 @@ use serde::{Deserialize, Serialize};
 /// - `m`: The month.
 /// # Returns
 /// - The amount of days in the month.
-#[allow(dead_code)]
 #[cached]
 pub fn days_in_month(m: u8) -> u8 {
     match m {
@@ -40,19 +39,37 @@ pub enum SimpleRecurrence {
     Year,
 }
 
-impl SimpleRecurrence {
-    // Returns the string representation according to the language given.
-    // # Arguments
-    // - `lang`: The language.
-    // # Returns
-    // - The string representation according to the language given.
-    // pub fn to_lang_str(&self, lang: &str) -> String {
-    //     match self {
-    //         Self::Day => t!("recurrence.simple.day", lang),
-    //         Self::Month => t!("recurrence.simple.month", lang),
-    //         Self::Year => t!("recurrence.simple.year", lang),
-    //     }
-    // }
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum Day {
+    Normal(u8),
+    Last,
+}
+
+impl Day {
+    pub fn from_day(day: u8, month: u8) -> Self {
+        let max_days = days_in_month(month);
+
+        if day >= max_days {
+            Self::Last
+        } else {
+            Self::Normal(day)
+        }
+    }
+
+    pub fn get_day(&self, month: u8) -> u8 {
+        let max_days = days_in_month(month);
+
+        match self {
+            Self::Normal(d) => {
+                if *d > max_days {
+                    max_days
+                } else {
+                    *d
+                }
+            }
+            Self::Last => max_days,
+        }
+    }
 }
 
 /// A more complex recurrence enum. It stores the recurrence in a more complex way.
@@ -61,9 +78,9 @@ pub enum Recurrence {
     /// Amount of days
     Day(u8),
     /// Day of the month, amount of months
-    Month(u8, u8),
+    Month(Day, u8),
     /// Day of the month, month of the year, amount of years
-    Year(u8, u8, u8),
+    Year(Day, u8, u8),
 }
 
 impl Recurrence {
@@ -82,8 +99,8 @@ impl Recurrence {
     ) -> Self {
         match value {
             SimpleRecurrence::Day => Self::Day(days),
-            SimpleRecurrence::Month => Self::Month(days, months),
-            SimpleRecurrence::Year => Self::Year(days, months, years),
+            SimpleRecurrence::Month => Self::Month(Day::from_day(days, months), months),
+            SimpleRecurrence::Year => Self::Year(Day::from_day(days, months), months, years),
         }
     }
 
@@ -99,11 +116,19 @@ impl Recurrence {
 impl Display for Recurrence {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Day(days) => write!(f, "Each {} days", days),
-            Self::Month(day, months) => write!(f, "Each {} months on day {}", months, day),
-            Self::Year(day, month, years) => {
-                write!(f, "Each {} years on day {} of month {}", years, day, month)
-            }
+            Self::Day(days) => write!(f, "Every {} day(s)", days),
+            Self::Month(day_r, months) => match day_r {
+                Day::Normal(day) => write!(f, "Every {} month(s) on day {}", months, day),
+                Day::Last => write!(f, "The last day of the month every {} month(s)", months),
+            },
+            Self::Year(day_r, month, years) => match day_r {
+                Day::Normal(day) => write!(
+                    f,
+                    "Every {} year(s) on day {} of month {}",
+                    years, day, month
+                ),
+                Day::Last => write!(f, "The last day of month {} every {} year(s)", month, years),
+            },
         }
     }
 }
@@ -141,7 +166,10 @@ pub fn times_until(recurrence: Recurrence, from: NaiveDate, to: NaiveDate) -> u3
         }
         Recurrence::Month(day, each_months) => {
             // Count the amount of times the day "day" has passed since today to the target date
-            let mut start = from.clone().with_day(day as u32).unwrap();
+            let mut start = from
+                .clone()
+                .with_day(day.get_day(from.month0() as u8 + 1) as u32)
+                .unwrap();
 
             let mut times: u32 = 0;
 
@@ -155,7 +183,7 @@ pub fn times_until(recurrence: Recurrence, from: NaiveDate, to: NaiveDate) -> u3
 
             let target = to
                 .clone()
-                .with_day(day as u32)
+                .with_day(day.get_day(to.month0() as u8 + 1) as u32)
                 .unwrap()
                 .checked_add_days(Days::new(1))
                 .unwrap();
@@ -174,7 +202,7 @@ pub fn times_until(recurrence: Recurrence, from: NaiveDate, to: NaiveDate) -> u3
             // Count the amount of times the day "day" has passed since today to the target date
             let mut start = from
                 .clone()
-                .with_day(day as u32)
+                .with_day(day.get_day(from.month0() as u8 + 1) as u32)
                 .unwrap()
                 .with_month(month as u32)
                 .unwrap();
@@ -191,7 +219,7 @@ pub fn times_until(recurrence: Recurrence, from: NaiveDate, to: NaiveDate) -> u3
 
             let target = to
                 .clone()
-                .with_day(day as u32)
+                .with_day(day.get_day(to.month0() as u8 + 1) as u32)
                 .unwrap()
                 .checked_add_days(Days::new(1))
                 .unwrap()

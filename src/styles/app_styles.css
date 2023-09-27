@@ -180,7 +180,7 @@
 
     padding-bottom: 3em;
 
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .footer .horizontal-grid {
