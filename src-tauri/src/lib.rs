@@ -22,7 +22,7 @@ pub fn format_money(amount: f32) -> String {
     if amount == 0.0 {
         // This is to avoid the whole "- 0.0" debacle, because of floating
         // point precision.
-        "0.00 €".to_string() 
+        "0.00 €".to_string()
     } else {
         format!("{:+.2} €", amount)
     }
