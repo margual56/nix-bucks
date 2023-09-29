@@ -2,7 +2,9 @@ pub mod getters;
 pub mod tables;
 mod utils;
 
-pub use utils::{FixedExpense, Recurrence, Subscription, TmpExpense, TmpSubscription};
+pub use utils::{
+    times_until, Day, FixedExpense, Recurrence, Subscription, TmpExpense, TmpSubscription,
+};
 
 pub struct Wrapper(pub Mutex<App>);
 

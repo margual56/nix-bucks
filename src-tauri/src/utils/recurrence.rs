@@ -145,13 +145,13 @@ impl Display for Recurrence {
 /// # Examples
 /// ```
 /// use chrono::NaiveDate;
-/// use nix_bucks::{Recurrence, times_until};
+/// use nix_bucks::{Recurrence, Day, times_until};
 ///
 /// fn main() {
 ///    let start = NaiveDate::from_ymd_opt(2021, 1, 1).unwrap();
 ///    let end = NaiveDate::from_ymd_opt(2022, 1, 1).unwrap();
 ///
-///    let recurrence = Recurrence::Month(1, 1);
+///    let recurrence = Recurrence::Month(Day::Normal(1), 1);
 ///    let times = times_until(recurrence, start, end);
 ///    assert_eq!(times, 14);
 ///
