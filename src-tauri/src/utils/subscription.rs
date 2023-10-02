@@ -77,14 +77,14 @@ impl Subscription {
     /// - A new subscription.
     /// # Examples
     /// ```
-    /// use nix_bucks::{Subscription, Recurrence};
+    /// use nix_bucks::{Subscription, Recurrence, Day};
     /// use chrono::{Utc, NaiveDate};
     ///
     /// pub fn main() {
     ///    let subscription = Subscription::new(
     ///        String::from("My new subscription"),
     ///        123.0,
-    ///        Recurrence::Month(1, 1)
+    ///        Recurrence::Month(Day::Normal(1), 1)
     ///    );
     ///
     ///    println!("{:?}", subscription);

@@ -3,6 +3,8 @@ A simple budgeting app
 
 ![Screenshot_20230925_095442](https://github.com/margual56/nix-bucks/assets/30444886/85addccb-8df7-4652-b33d-92161c61c80a)
 
+**Roadmap**: [watch here](https://github.com/users/margual56/projects/5/views/1)
+
 # Install
 If you are on Linux, you can download the Appimage from the latest release ([click here](https://github.com/margual56/nix-bucks/releases)).
 Otherwise, you can install from the .deb package.
@@ -28,14 +30,6 @@ Remember that you can back up the config file, and also you can create copies to
 ## Non-goals
 - Provide detailed information
 - Do statistics with the data
-
-## Planned features
-- [ ] Translation to Spanish (if you know more languages, please feel free to contribute)!
-- [x] A complete overhaul of the UI: New colors, new layout, new design. I hired a professional designer to design this (please consider donating).
-- [ ] A small banner at the bottom that only shows up the second time that you open the program. Once you dismiss it, it won't show up again. It will ask the user to consider donating to the project.
-- [x] An icon for the application.
-- [ ] A splash screen to organize profiles: save, copy, load, etc.
-- [x] A refactor of the code: Cleanup, documentation and optimizations.
 
 # Help!
 If you know Rust and think you can help, please do! :)
